@@ -1,0 +1,11 @@
+﻿1. one exe project
+2. this app should be a replacement for RUN
+3. MVVM
+4. Dependency Inversion (not important)
+5. Update usage rank on item selection
+6. Remove global keyboard hook and find another way to Launch
+7. If this is a better replacement for RUN window, use RUN shortcut itself. and change name from LauncIt to Runner
+8. Show in tray. its better, so that app is not hidden from user.
+9. Icon of file => Icon.ExtractAssociatedIcon(filePath)
+10. 
+
