@@ -38,6 +38,7 @@ namespace LaunchIt.Helper
 
         public List<FileDetail> IndexFiles()
         {
+            _context.LoadSettings();
             var fileRanks = new List<FileDetail>();
             foreach (var fPaths in _context.Settings.SourcePaths)
             {
@@ -50,19 +51,25 @@ namespace LaunchIt.Helper
 
                 foreach (var fType in types)
                 {
-                    var searchOpt = fPaths.RecursiveSearch ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-                    var filePaths = dInfo.GetFiles(fType, searchOpt).Select(f => f.FullName);
-                    foreach (var path in filePaths)
+                    try
                     {
-                        var duplicate = fileRanks.FirstOrDefault(fr => fr.FilePath.Equals(path, StringComparison.InvariantCultureIgnoreCase));
-                        if (duplicate == null)
+                        var searchOpt = fPaths.RecursiveSearch ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+                        var filePaths = dInfo.GetFiles(fType, searchOpt).Select(f => f.FullName);
+                        foreach (var path in filePaths)
                         {
-                            var existing = _context.FileDetailList.FirstOrDefault(fr => fr.FilePath.Equals(path, StringComparison.InvariantCultureIgnoreCase));
-                            if (existing != null)
-                                fileRanks.Add(existing);
-                            else
-                                fileRanks.Add(new FileDetail(path, 0));
+                            var duplicate = fileRanks.FirstOrDefault(fr => fr.FilePath.Equals(path, StringComparison.InvariantCultureIgnoreCase));
+                            if (duplicate == null)
+                            {
+                                var existing = _context.FileDetailList.FirstOrDefault(fr => fr.FilePath.Equals(path, StringComparison.InvariantCultureIgnoreCase));
+                                if (existing != null)
+                                    fileRanks.Add(existing);
+                                else
+                                    fileRanks.Add(new FileDetail(path, 0));
+                            }
                         }
+                    }
+                    catch (Exception exp)
+                    {
                     }
                 }
             }

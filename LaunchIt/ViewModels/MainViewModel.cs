@@ -1,14 +1,17 @@
 ﻿using LaunchIt.Core;
 using LaunchIt.Data;
 using LaunchIt.Helper;
+using LaunchIt.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 
 namespace LaunchIt
 {
     class MainViewModel : ViewModelBase
     {
+        SettingsViewModel _settingsVM;
         private string _searchText;
 
         public string SearchText
@@ -29,13 +32,14 @@ namespace LaunchIt
         public MainViewModel()
         {
             dataHelper = new DataHelper();
+            _settingsVM = new SettingsViewModel(dataHelper);
         }
 
         void UpdateList()
         {
             if (!String.IsNullOrWhiteSpace(SearchText))
                 Files = dataHelper.GetFileDetailList()
-                    .Where(f => f.Name.Contains(_searchText))
+                    .Where(f => f.Name.ToLower().Contains(_searchText.ToLower()))
                     .OrderBy(f => f.UsageCount)
                     .Take(8)
                     .ToList();
@@ -59,6 +63,24 @@ namespace LaunchIt
             set { _selectedItem = value; OnPropertyChanged("SelectedItem"); }
         }
 
+        private ICommand _aboutCommmand;
+        public ICommand AboutCommand
+        {
+            get
+            {
+                if (_aboutCommmand == null)
+                {
+                    _aboutCommmand = new DelegateCommand(p =>
+                    {
+                        var _settingsWindow = new SettingsWindow();
+                        _settingsWindow.Owner = p as MainWindow;
+                        _settingsWindow.DataContext = _settingsVM;
+                        _settingsWindow.ShowDialog();
+                    });
+                }
+                return _aboutCommmand;
+            }
+        }
 
 
         internal void MovePrevious()

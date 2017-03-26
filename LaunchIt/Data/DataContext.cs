@@ -40,16 +40,16 @@ namespace LaunchIt.Data
 
         private Settings GetFactorySettings()
         {
-            var fp = new SourcePath();
-            fp.Path = @"%SystemRoot%/system32";
-            fp.Types = "*.bat;*.lnk;*.exe";
-            fp.RecursiveSearch = false;
+            var sys32 = new SourcePath() { Path = @"%SystemRoot%/system32", Types = "*.bat;*.lnk;*.exe", RecursiveSearch = false };
+            var appData = new SourcePath() { Path = @"%APPDATA%", Types = "*.lnk;*.exe", RecursiveSearch = true };
 
             var settings = new Settings();
-            settings.SourcePaths = new List<SourcePath>() { fp, fp, fp, fp };
+            settings.SourcePaths = new List<SourcePath>() { appData, sys32 };
 
             return settings;
         }
+
+
 
         public Settings LoadSettings()
         {
@@ -88,8 +88,8 @@ namespace LaunchIt.Data
         public bool Save<T>(T data, string fileName)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (var fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
-            using (var writer = new StreamWriter(fs))
+            //using (var fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+            using (var writer = new StreamWriter(fileName, append: false))
             {
                 serializer.Serialize(writer, data);
             }

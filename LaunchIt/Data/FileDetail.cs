@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System.Drawing;
+using System.IO;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 
 namespace LaunchIt.Data
@@ -12,10 +16,10 @@ namespace LaunchIt.Data
                 return GetFileName(FilePath);
             }
         }
-        
+
         [XmlText]
         public string FilePath { get; set; }
-        
+
         [XmlAttribute("InvokeCount")]
         public int UsageCount { get; set; }
 
@@ -23,11 +27,12 @@ namespace LaunchIt.Data
         {
             FilePath = path; UsageCount = rank;
         }
+        
         public FileDetail()
         {
 
         }
-                
+
         static string GetFileName(string filePath)
         {
             return new FileInfo(filePath).Name; ;
