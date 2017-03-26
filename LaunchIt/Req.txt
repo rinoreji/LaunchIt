@@ -9,7 +9,7 @@
 9. Icon of file => Icon.ExtractAssociatedIcon(filePath) - Async
 10. Settings window
 11. Auto fill while typing
-12. 
+12. Scrollbar in listbox after 8 items
 
 Soni
 1. Bug - backspace after Selecting text
