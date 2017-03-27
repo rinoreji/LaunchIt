@@ -19,7 +19,6 @@ namespace LaunchIt
             this.DataContext = vm;
 
             InitializeComponent();
-
             Loaded += (s, e) =>
             {
                 var showHk = new HotKey(ModifierKeys.Control, Keys.Space, this);
@@ -31,6 +30,7 @@ namespace LaunchIt
                 SetSearchTextOnFocus();
             };
 
+            this.MouseLeftButtonUp += (s, e) => vm.LaunchSelected();
         }
 
         void OnPreviewKeyDown(object sender, KeyEventArgs e)
@@ -47,11 +47,11 @@ namespace LaunchIt
                     vm.LaunchSelected();
                     break;
                 default:
-                    SetSearchTextOnFocus();
+                   // SetSearchTextOnFocus();
                     break;
             }
         }
-
+         
         private void SetSearchTextOnFocus()
         {
             this.Activate();
