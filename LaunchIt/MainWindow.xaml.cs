@@ -24,13 +24,13 @@ namespace LaunchIt
                 var showHk = new HotKey(ModifierKeys.Control, Keys.Space, this);
                 showHk.HotKeyPressed += showHk_HotKeyPressed;
 
-                var hideHk = new HotKey(ModifierKeys.None, Keys.Escape, this);
-                hideHk.HotKeyPressed += hideHk_HotKeyPressed;
+                //var hideHk = new HotKey(ModifierKeys.None, Keys.Escape, this);
+                //hideHk.HotKeyPressed += hideHk_HotKeyPressed;
 
                 SetSearchTextOnFocus();
             };
 
-            this.MouseLeftButtonUp += (s, e) => vm.LaunchSelected();
+            this.MouseLeftButtonUp += (s, e) => LaunchSelected();
         }
 
         void OnPreviewKeyDown(object sender, KeyEventArgs e)
@@ -44,12 +44,27 @@ namespace LaunchIt
                     vm.MovePrevious();
                     break;
                 case Key.Enter:
-                    vm.LaunchSelected();
+                    LaunchSelected();
+                    break;
+                case Key.Escape:
+                    ResetSearch();
+                    this.Hide();
                     break;
                 default:
                    // SetSearchTextOnFocus();
                     break;
             }
+        }
+
+        void LaunchSelected()
+        {
+            vm.LaunchSelected();
+            ResetSearch();
+        }
+
+        void ResetSearch()
+        {
+            SearchText.Text = "";
         }
          
         private void SetSearchTextOnFocus()
@@ -57,11 +72,6 @@ namespace LaunchIt
             this.Activate();
             SearchText.CaretIndex = SearchText.Text.Length;
             SearchText.Focus();
-        }
-
-        void hideHk_HotKeyPressed(HotKey obj)
-        {
-            this.Hide();
         }
 
         void showHk_HotKeyPressed(HotKey obj)
