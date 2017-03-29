@@ -42,5 +42,17 @@ namespace LaunchIt.Data
         {
             return string.Format("{0} - {1}", Name, FilePath);
         }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as FileDetail;
+            if (other == null)
+                return false;
+
+            if (!string.Equals(this.FilePath, other.FilePath, System.StringComparison.OrdinalIgnoreCase))
+                return false;
+            
+            return this.UsageCount == other.UsageCount;
+        }
     }
 }

@@ -51,7 +51,7 @@ namespace LaunchIt
                     this.Hide();
                     break;
                 default:
-                   // SetSearchTextOnFocus();
+                    //SetSearchTextOnFocus();
                     break;
             }
         }
@@ -66,7 +66,7 @@ namespace LaunchIt
         {
             SearchText.Text = "";
         }
-         
+
         private void SetSearchTextOnFocus()
         {
             this.Activate();

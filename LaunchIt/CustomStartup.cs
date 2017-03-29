@@ -12,12 +12,9 @@ namespace LaunchIt
         [System.STAThreadAttribute]
         static void Main()
         {
-            //using (var hook = new KeyboardHook())
-            {
-                var app = new App();// new App(hook);
-                app.InitializeComponent();
-                app.Run();
-            }
+            var app = new App();
+            app.InitializeComponent();
+            app.Run();
         }
     }
 }

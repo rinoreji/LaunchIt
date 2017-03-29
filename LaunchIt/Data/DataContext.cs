@@ -9,13 +9,15 @@ namespace LaunchIt.Data
         const string DB_FILE_NAME = "LaunchIt.xml";
         const string SETTINGS_FILE_NAME = "Settings.xml";
 
-        private Data _data = new Data();
-        private Settings _settings = new Settings();
+        private Data _data;// = new Data();
+        private Settings _settings;// = new Settings();
 
         public Settings Settings
         {
             get
             {
+                if (_settings == null)
+                    _settings = LoadSettings();
                 return _settings;
             }
             set
@@ -28,7 +30,8 @@ namespace LaunchIt.Data
         {
             get
             {
-
+                if (_data == null)
+                    _data = LoadData();
                 return _data.Files;
             }
             set
@@ -52,27 +55,24 @@ namespace LaunchIt.Data
 
 
 
-        public Settings LoadSettings()
+        private Settings LoadSettings()
         {
             if (!File.Exists(SETTINGS_FILE_NAME))
             {
                 Save(GetFactorySettings(), SETTINGS_FILE_NAME);
             }
 
-            Settings = Load<Settings>(SETTINGS_FILE_NAME);
-
-            return Settings;
+            return Load<Settings>(SETTINGS_FILE_NAME);
         }
 
-        public Data LoadData()
+        private Data LoadData()
         {
             if (!File.Exists(DB_FILE_NAME))
             {
                 Save(new Data { Files = new List<FileDetail>() }, DB_FILE_NAME);
             }
 
-            _data = Load<Data>(DB_FILE_NAME);
-            return _data;
+            return Load<Data>(DB_FILE_NAME);
         }
 
         private T Load<T>(string fileName)
@@ -98,14 +98,20 @@ namespace LaunchIt.Data
             return true;
         }
 
-        internal bool SaveFileList()
+        internal bool SaveData()
         {
-            return Save(_data, DB_FILE_NAME);
+            var dataInDisc = LoadData();
+            if (!_data.Equals(dataInDisc))
+                return Save(_data, DB_FILE_NAME);
+            return true;
         }
 
         internal bool SaveSettings()
         {
-            return Save(_settings, SETTINGS_FILE_NAME);
+            var settings = LoadSettings();
+            if (!_settings.Equals(settings))
+                return Save(_settings, SETTINGS_FILE_NAME);
+            return true;
         }
     }
 }

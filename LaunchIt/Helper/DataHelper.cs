@@ -14,9 +14,7 @@ namespace LaunchIt.Helper
 
         public DataHelper()
         {
-            _context.LoadSettings();
-            var data = _context.LoadData();
-            if (data.Files.Count <= 0)
+            if (_context.FileDetailList.Count <= 0)
                 IndexFiles();
         }
 
@@ -38,7 +36,6 @@ namespace LaunchIt.Helper
 
         public List<FileDetail> IndexFiles()
         {
-            _context.LoadSettings();
             var fileRanks = new List<FileDetail>();
             foreach (var fPaths in _context.Settings.SourcePaths)
             {
@@ -75,7 +72,7 @@ namespace LaunchIt.Helper
             }
 
             _context.FileDetailList = fileRanks;
-            _context.SaveFileList();
+            _context.SaveData();
             return _context.FileDetailList;
         }
 
