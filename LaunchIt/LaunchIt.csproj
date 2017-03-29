@@ -63,6 +63,8 @@
     <Compile Include="Converters\ListToVisibilityConverter.cs" />
     <Compile Include="Converters\FilePathToIconConverter.cs" />
     <Compile Include="Data\Settings.cs" />
+    <Compile Include="Data\UsageDetail.cs" />
+    <Compile Include="Data\UsageStatistics.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>

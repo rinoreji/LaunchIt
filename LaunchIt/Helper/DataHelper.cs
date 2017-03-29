@@ -61,7 +61,7 @@ namespace LaunchIt.Helper
                                 if (existing != null)
                                     fileRanks.Add(existing);
                                 else
-                                    fileRanks.Add(new FileDetail(path, 0));
+                                    fileRanks.Add(new FileDetail(path));
                             }
                         }
                     }
@@ -76,9 +76,32 @@ namespace LaunchIt.Helper
             return _context.FileDetailList;
         }
 
-        public IEnumerable<FileDetail> GetFileDetailList()
+        public IList<FileDetail> FileDetailList
         {
-            return _context.FileDetailList;
+            get
+            {
+                return _context.FileDetailList;
+            }
+        }
+
+        public List<UsageDetail> UsageStatistics
+        {
+            get
+            {
+                return _context.UsageStatitics.UsageDetails;
+            }
+        }
+
+        internal void SaveUsageStatitics()
+        {
+            _context.SaveUsageData();
+
+            this.UsageStatistics.ForEach(u =>
+            {
+                var item = this.FileDetailList.FirstOrDefault(f => string.Equals(f.FilePath, u.FullPath, System.StringComparison.OrdinalIgnoreCase));
+                if (item != null)
+                    item.UsedCount = u.UsageCount;
+            });
         }
     }
 }

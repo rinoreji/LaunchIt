@@ -20,14 +20,14 @@ namespace LaunchIt.Data
         [XmlText]
         public string FilePath { get; set; }
 
-        [XmlAttribute("InvokeCount")]
-        public int UsageCount { get; set; }
+        [XmlIgnore]
+        public int UsedCount { get; set; }
 
-        public FileDetail(string path, int rank)
+        public FileDetail(string path)
         {
-            FilePath = path; UsageCount = rank;
+            FilePath = path;
         }
-        
+
         public FileDetail()
         {
 
@@ -48,11 +48,8 @@ namespace LaunchIt.Data
             var other = obj as FileDetail;
             if (other == null)
                 return false;
-
-            if (!string.Equals(this.FilePath, other.FilePath, System.StringComparison.OrdinalIgnoreCase))
-                return false;
             
-            return this.UsageCount == other.UsageCount;
+            return (!string.Equals(this.FilePath, other.FilePath, System.StringComparison.OrdinalIgnoreCase));
         }
     }
 }

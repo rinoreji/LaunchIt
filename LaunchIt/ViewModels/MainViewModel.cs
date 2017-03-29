@@ -38,15 +38,16 @@ namespace LaunchIt
         void UpdateList()
         {
             if (!String.IsNullOrWhiteSpace(SearchText))
-                Files = dataHelper.GetFileDetailList()
+                Files = dataHelper.FileDetailList
                     .Where(f => f.Name.ToLower().Contains(_searchText.ToLower()))
-                    .OrderBy(f => f.UsageCount)
+                    .OrderByDescending(f => f.UsedCount)
                     .Take(8)
                     .ToList();
             else
                 Files = new List<FileDetail>();
 
             SelectedItem = Files.FirstOrDefault();
+            SelectedIndex = 0;
         }
 
         private int _selectedIndex;
@@ -82,7 +83,6 @@ namespace LaunchIt
             }
         }
 
-
         internal void MovePrevious()
         {
             SelectedIndex = GetNewIndex(SelectedIndex - 1);
@@ -111,6 +111,18 @@ namespace LaunchIt
             if (itemToLaunch != null)
             {
                 Launcher.Launch(itemToLaunch);
+
+                var usageDetail = dataHelper.UsageStatistics.FirstOrDefault(u => string.Equals(u.FullPath, itemToLaunch.FilePath, StringComparison.OrdinalIgnoreCase));
+                if (usageDetail == null)
+                {
+                    dataHelper.UsageStatistics.Add(new UsageDetail(itemToLaunch.FilePath, 1));
+                }
+                else
+                {
+                    usageDetail.UsageCount += 1;
+                }
+
+                dataHelper.SaveUsageStatitics();
             }
         }
     }

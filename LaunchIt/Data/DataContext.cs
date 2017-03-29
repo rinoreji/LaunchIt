@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -8,9 +9,11 @@ namespace LaunchIt.Data
     {
         const string DB_FILE_NAME = "LaunchIt.xml";
         const string SETTINGS_FILE_NAME = "Settings.xml";
+        const string USAGE_FILE_NAME = "UsageStatitics.xml";
 
         private Data _data;// = new Data();
         private Settings _settings;// = new Settings();
+        private UsageStatistics _usageStat;
 
         public Settings Settings
         {
@@ -40,6 +43,18 @@ namespace LaunchIt.Data
             }
         }
 
+        public UsageStatistics UsageStatitics
+        {
+            get
+            {
+                if (_usageStat == null)
+                    _usageStat = LoadUsageData();
+                return _usageStat;
+            }
+            set { _usageStat = value; }
+        }
+
+
 
         private Settings GetFactorySettings()
         {
@@ -52,8 +67,6 @@ namespace LaunchIt.Data
 
             return settings;
         }
-
-
 
         private Settings LoadSettings()
         {
@@ -72,7 +85,27 @@ namespace LaunchIt.Data
                 Save(new Data { Files = new List<FileDetail>() }, DB_FILE_NAME);
             }
 
-            return Load<Data>(DB_FILE_NAME);
+            var data = Load<Data>(DB_FILE_NAME);
+            var usageStat = LoadUsageData();
+
+            usageStat.UsageDetails.ForEach(u =>
+            {
+                var item = data.Files.FirstOrDefault(f => string.Equals(f.FilePath, u.FullPath, System.StringComparison.OrdinalIgnoreCase));
+                if (item != null)
+                    item.UsedCount = u.UsageCount;
+            });
+
+            return data;
+        }
+
+        private UsageStatistics LoadUsageData()
+        {
+            if (!File.Exists(USAGE_FILE_NAME))
+            {
+                Save(new UsageStatistics { UsageDetails = new List<UsageDetail>() }, USAGE_FILE_NAME);
+            }
+
+            return Load<UsageStatistics>(USAGE_FILE_NAME);
         }
 
         private T Load<T>(string fileName)
@@ -98,10 +131,19 @@ namespace LaunchIt.Data
             return true;
         }
 
+        internal bool SaveUsageData()
+        {
+            var dataInDisc = LoadUsageData();
+            if (!dataInDisc.Equals(_usageStat))
+                return Save(_usageStat, USAGE_FILE_NAME);
+
+            return true;
+        }
+
         internal bool SaveData()
         {
             var dataInDisc = LoadData();
-            if (!_data.Equals(dataInDisc))
+            if (!dataInDisc.Equals(_data))
                 return Save(_data, DB_FILE_NAME);
             return true;
         }
@@ -109,7 +151,7 @@ namespace LaunchIt.Data
         internal bool SaveSettings()
         {
             var settings = LoadSettings();
-            if (!_settings.Equals(settings))
+            if (!settings.Equals(_settings))
                 return Save(_settings, SETTINGS_FILE_NAME);
             return true;
         }
