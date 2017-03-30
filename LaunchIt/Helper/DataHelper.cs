@@ -103,5 +103,13 @@ namespace LaunchIt.Helper
                     item.UsedCount = u.UsageCount;
             });
         }
+
+        public HotKey HotKey
+        {
+            get
+            {
+                return _context.Settings.HotKey;
+            }
+        }
     }
 }

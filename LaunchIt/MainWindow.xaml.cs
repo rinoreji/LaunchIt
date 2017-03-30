@@ -21,7 +21,8 @@ namespace LaunchIt
             InitializeComponent();
             Loaded += (s, e) =>
             {
-                var showHk = new HotKey(ModifierKeys.Control, Keys.Space, this);
+                var hkSettings = dataHelper.HotKey;
+                var showHk = new HotKey((ModifierKeys)hkSettings.ModifierKey, (Keys)hkSettings.Key, this);
                 showHk.HotKeyPressed += showHk_HotKeyPressed;
 
                 //var hideHk = new HotKey(ModifierKeys.None, Keys.Escape, this);

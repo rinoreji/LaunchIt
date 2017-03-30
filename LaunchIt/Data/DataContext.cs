@@ -60,11 +60,12 @@ namespace LaunchIt.Data
         {
             var settings = new Settings();
             settings.SourcePaths = new List<SourcePath>() { 
-                new SourcePath() { Path = @"%SystemRoot%/system32", Types = "*.bat;*.lnk;*.exe", RecursiveSearch = false },
+                new SourcePath() { Path = @"%SystemRoot%\system32", Types = "*.bat;*.lnk;*.exe", RecursiveSearch = false },
                 new SourcePath() { Path = @"%APPDATA%\Microsoft\Internet Explorer\Quick Launch", Types = "*.lnk", RecursiveSearch = true },
                 new SourcePath() { Path = @"%PROGRAMDATA%\Microsoft\Windows\Start Menu", Types = "*.lnk", RecursiveSearch = true },
+                new SourcePath() { Path = @"D:\Playground\scripting\bat", Types = "*.bat", RecursiveSearch = true },
             };
-
+            settings.HotKey = new HotKey { ModifierKey = 1, Key = 32 };
             return settings;
         }
 
