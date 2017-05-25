@@ -111,5 +111,15 @@ namespace LaunchIt.Helper
                 return _context.Settings.HotKey;
             }
         }
+
+        public Settings GetSettings()
+        {
+            return _context.Settings;
+        }
+
+        public bool SaveSettings()
+        {
+            return _context.SaveSettings();
+        }
     }
 }

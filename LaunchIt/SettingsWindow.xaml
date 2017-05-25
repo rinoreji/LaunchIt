@@ -2,8 +2,12 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         WindowStartupLocation="CenterOwner"
-        Title="SettingsWindow" Height="400" Width="400">
+        xmlns:vc="clr-namespace:LaunchIt.Converters"
+        Title="SettingsWindow" Height="500" Width="600">
     <Grid>
+        <Grid.Resources>
+            <vc:FileTypesConverter x:Key="FileTypesConverter"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
@@ -14,10 +18,18 @@
                 <ColumnDefinition Width=".3*"/>
             </Grid.ColumnDefinitions>
             <GroupBox Header="Paths">
-                <ListBox ItemsSource="{Binding SourcePaths}"></ListBox>
+                <ListBox ItemsSource="{Binding SettingsData.SourcePaths}" SelectedItem="{Binding SelectedSource}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </GroupBox>
             <GroupBox Header="Types" Grid.Column="2">
-                <ListBox ItemsSource="{Binding SourceTypes}"></ListBox>
+                <ListBox ItemsSource="{Binding SelectedSource.Types, Converter={StaticResource FileTypesConverter}}">
+                    
+                </ListBox>
             </GroupBox>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
